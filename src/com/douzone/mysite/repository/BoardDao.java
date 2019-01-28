@@ -96,7 +96,7 @@ public class BoardDao
 		return result;
 	}
 	
-	public boolean update(long no, String title, String content)
+	public boolean update(long no, String title, String content, long sessionUserNo)
 	{
 		boolean result = false;
 		Connection conn = null;
@@ -106,13 +106,15 @@ public class BoardDao
 		{
 			 conn = getConnection();
 			 
-			 String sql = "update board set title = ?, contents = ? where no = ?";
+			 String sql = "update board set title = ?, contents = ? where no = ? and user_no = ?";
 			 
 			 pstmt = conn.prepareCall(sql);
 			 
 			 pstmt.setString(1, title);
 			 pstmt.setString(2, content);
 			 pstmt.setLong(3, no);
+			 pstmt.setLong(4, sessionUserNo);
+			 
 			 System.out.println("no : " + no);
 			 int count = pstmt.executeUpdate();
 			 result = count == 1;

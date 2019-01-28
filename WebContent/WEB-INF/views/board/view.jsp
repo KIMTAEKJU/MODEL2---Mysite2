@@ -7,11 +7,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
-<%
-	UserVo sessionVo = (UserVo)request.getAttribute("session");
-	String no = (String)request.getAttribute("no");
-%>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -45,13 +40,13 @@
 					
 				</table>
 				<div class="bottom">
-					<a href="${pageContext.servletContext.contextPath }/board?a=replyform&no=<%=no %>">답글달기</a>
+					<a href="${pageContext.servletContext.contextPath }/board?a=replyform&no=${no}">답글달기</a>
 					<a href="${pageContext.servletContext.contextPath }/board?a=list">글목록</a>
 					
 					<!-- if (sessionVo != null && list.get(0).getUserNo() == sessionVo.getNo()) -->
 					
 					<c:if test="${!empty session && vo.userNo == session.no}">
-						<a href="${pageContext.servletContext.contextPath }/board?a=modifyform&no=<%=no %>">글수정</a>
+						<a href="${pageContext.servletContext.contextPath }/board?a=modifyform&no=${no}">글수정</a>
 					</c:if>
 				</div>
 			</div>

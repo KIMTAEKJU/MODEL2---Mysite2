@@ -25,9 +25,10 @@ public class BoardWriteAction implements Action
 		HttpSession hs = request.getSession();
 		
 		UserVo uVo = (UserVo) hs.getAttribute("authuser");
-		BoardVo bVo = new BoardVo();
+		//BoardVo bVo = new BoardVo();
 		
-		new BoardDao().insert(title, content, uVo.getNo());
+		if (uVo != null)
+			new BoardDao().insert(title, content, uVo.getNo());
 		
 		WebUtils.redirect(request, response, request.getContextPath() + "/board?a=list");
 	}

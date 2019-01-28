@@ -21,10 +21,11 @@ public class ModifyAction implements Action
 	{
 		HttpSession hs = request.getSession();
 		UserVo vo = (UserVo)hs.getAttribute("authuser");
+		
 		vo.setName(request.getParameter("name"));
 		vo.setPassword(request.getParameter("password"));
 		vo.setGender(request.getParameter("gender"));
-		
+			
 		new UserDao().update(vo);
 		
 		WebUtils.redirect(request, response, request.getContextPath());

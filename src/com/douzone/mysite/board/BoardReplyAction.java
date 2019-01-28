@@ -24,6 +24,12 @@ public class BoardReplyAction implements Action
 		String content = request.getParameter("content");
 		
 		List<BoardVo> list = new BoardDao().get(no);
+
+		if (list.size() == 0)
+		{
+			WebUtils.forward(request, response, "/WEB-INF/views/main/index.jsp");
+			return;
+		}
 		
 		long gNo = list.get(0).getgNo();
 		long oNo = list.get(0).getoNo() + 1;
@@ -32,23 +38,29 @@ public class BoardReplyAction implements Action
 		HttpSession session = request.getSession();
 		UserVo uVo = (UserVo)session.getAttribute("authuser");
 		
-		BoardVo voIn = new BoardVo();
-		voIn.setTitle(title);
-		voIn.setContents(content);
-		voIn.setgNo(gNo);
-		voIn.setoNo(oNo);
-		voIn.setDepth(depth);
-		voIn.setUserNo(uVo.getNo());
+		if (uVo != null)
+		{
 		
-		BoardVo voUp = new BoardVo();
-		voUp.setgNo(gNo);
-		voUp.setoNo(oNo);
+			BoardVo voIn = new BoardVo();
+			voIn.setTitle(title);
+			voIn.setContents(content);
+			voIn.setgNo(gNo);
+			voIn.setoNo(oNo);
+			voIn.setDepth(depth);
+			voIn.setUserNo(uVo.getNo());
+			
+			BoardVo voUp = new BoardVo();
+			voUp.setgNo(gNo);
+			voUp.setoNo(oNo);
+			
+			new BoardDao().update(voUp);
+			
+			new BoardDao().insert(voIn);
+			
+			WebUtils.redirect(request, response, request.getContextPath() + "/board?a=list");
+		}
 		
-		new BoardDao().update(voUp);
-		
-		new BoardDao().insert(voIn);
-		
-		WebUtils.redirect(request, response, request.getContextPath() + "/board?a=list");
+		WebUtils.forward(request, response, "/WEB-INF/views/main/index.jsp");
 	}
 
 }
