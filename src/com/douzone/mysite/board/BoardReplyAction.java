@@ -25,20 +25,20 @@ public class BoardReplyAction implements Action
 		
 		List<BoardVo> list = new BoardDao().get(no);
 
-		if (list.size() == 0)
+		if (list.size() == 0) // 아무것도 온게없을때
 		{
 			WebUtils.forward(request, response, "/WEB-INF/views/main/index.jsp");
 			return;
 		}
 		
 		long gNo = list.get(0).getgNo();
-		long oNo = list.get(0).getoNo() + 1;
-		long depth = list.get(0).getDepth() + 1;
+		long oNo = list.get(0).getoNo() + 1; // oNo + 1
+		long depth = list.get(0).getDepth() + 1; // depth + 1
 		
 		HttpSession session = request.getSession();
 		UserVo uVo = (UserVo)session.getAttribute("authuser");
 		
-		if (uVo != null)
+		if (uVo != null) // 로그인 안했을때
 		{
 		
 			BoardVo voIn = new BoardVo();
@@ -58,6 +58,7 @@ public class BoardReplyAction implements Action
 			new BoardDao().insert(voIn);
 			
 			WebUtils.redirect(request, response, request.getContextPath() + "/board?a=list");
+			return;
 		}
 		
 		WebUtils.forward(request, response, "/WEB-INF/views/main/index.jsp");

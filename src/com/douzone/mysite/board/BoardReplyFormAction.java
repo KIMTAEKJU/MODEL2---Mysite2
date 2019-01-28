@@ -21,10 +21,13 @@ public class BoardReplyFormAction implements Action
 		
 		if (vo != null)
 		{
-			
+			WebUtils.forward(request, response, "/WEB-INF/views/board/reply.jsp");
+			return;
 		}
 		
-		WebUtils.forward(request, response, "/WEB-INF/views/board/reply.jsp");
+		WebUtils.forward(request, response, "/WEB-INF/views/main/index.jsp");
+
+		
 	}
 
 }

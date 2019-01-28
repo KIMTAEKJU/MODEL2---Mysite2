@@ -26,8 +26,8 @@ public class BoardModifyFormAction implements Action
 		{
 			String no = request.getParameter("no");
 			List<BoardVo> list = new BoardDao().get(Long.parseLong(no));
-			
-			if (vo.getNo() == list.get(0).getUserNo())
+			System.out.println("fdsfsfdsfdsfsd : " + list.size());
+			if (list.size() == 0 && vo.getNo() == list.get(0).getUserNo())
 			{
 			
 				request.setAttribute("title", list.get(0).getTitle());
