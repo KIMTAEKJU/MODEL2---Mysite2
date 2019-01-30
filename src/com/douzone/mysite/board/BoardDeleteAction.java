@@ -18,20 +18,20 @@ public class BoardDeleteAction implements Action
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException 
 	{
 		String no = request.getParameter("no");
-		String userNo = request.getParameter("userNo");
 		HttpSession session = request.getSession();
 		UserVo vo = null;
 		
 		if (session.getAttribute("authuser") != null)
 			vo = (UserVo)session.getAttribute("authuser");
+		
 		else
 		{
-			WebUtils.redirect(request, response, request.getContextPath() + "/board?a=list");
+			WebUtils.redirect(request, response, request.getContextPath());
 			return;
 		}
 		
 		
-		new BoardDao().delete(Long.parseLong(no), Long.parseLong(userNo), vo.getNo());
+		new BoardDao().delete(Long.parseLong(no), vo.getNo());
 		
 		WebUtils.redirect(request, response, request.getContextPath() + "/board?a=list");
 	}

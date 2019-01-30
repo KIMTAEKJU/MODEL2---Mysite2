@@ -12,9 +12,16 @@ public class BoardVo
 	private long userNo;
 	private long gNo;
 	private long oNo;
+	private long totalCount;
 	
 	
 	
+	public long getTotalCount() {
+		return totalCount;
+	}
+	public void setTotalCount(long totalCount) {
+		this.totalCount = totalCount;
+	}
 	public long getgNo() {
 		return gNo;
 	}

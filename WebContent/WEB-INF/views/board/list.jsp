@@ -7,6 +7,12 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
+<%
+	long totalPage = (long)request.getAttribute("totalPage");
+	int startPage = (int)request.getAttribute("startPage");
+	int endPage = (int)request.getAttribute("endPage");
+
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +25,8 @@
 		<c:import url="/WEB-INF/views/includes/header.jsp"/>
 		<div id="content">
 			<div id="board">
-				<form id="search_form" action="" method="post">
+				<form id="search_form" action="${pageContext.servletContext.contextPath }/board" method="post">
+					<input type="hidden" name="a" value="list">
 					<input type="text" id="kwd" name="kwd" value="">
 					<input type="submit" value="찾기">
 				</form>
@@ -35,7 +42,7 @@
 					<c:forEach items="${list}" var="vo" varStatus = "status">
 					
 							<tr>
-								<td>${status.index + 1}</td>
+								<td>${(status.index + (page - 1) * listCount) + 1} </td>
 								<td style="padding-left:${20 * vo.depth}px">
 								
 									<c:if test="${vo.oNo != 1 }">
@@ -45,22 +52,40 @@
 								<td>${vo.name}</td>
 								<td>${vo.hit}</td>
 								<td>${vo.write_Date}</td>
-								<td><a href="${pageContext.servletContext.contextPath }/board?a=delete&no=${vo.no}&userNo=${ vo.userNo}" class="del"><img src="/mysite2/assets/images/recycle.png"></a></img></td>
+								<td><a href="${pageContext.servletContext.contextPath }/board?a=delete&no=${vo.no}" class="del"><img src="/mysite2/assets/images/recycle.png"></a></img></td>
 							</tr>
 					</c:forEach>
 				</table>
 				
 				<!-- pager 추가 -->
+				 <!-- 프리비어스 페이지를 계산해줘야함 시작과 끝이 몇인지 계산해라
+														1~5면 5까지 게시물이있는지 확인 현재페이지도 넘겨줘야함 -->
 				<div class="pager">
 					<ul>
-						<li><a href="">◀</a></li> <!-- 프리비어스 페이지를 계산해줘야함 시작과 끝이 몇인지 계산해라
-													1~5면 5까지 게시물이있는지 확인 현재페이지도 넘겨줘야함 -->
-						<li><a href="">1</a></li>
-						<li class="selected">2</li>
-						<li><a href="">3</a></li>
-						<li>4</li>
-						<li>5</li>
-						<li><a href="">▶</a></li>
+					<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=${page - 1}">◀</a></li>
+					<%
+						for (int i = startPage; i <= ((endPage < totalPage) ? endPage : totalPage) ; i++)
+						{
+					%>
+						<%
+							if (i == (int)(request.getAttribute("page")))
+							{
+						%>
+								<li class="selected"><a href="${pageContext.servletContext.contextPath }/board?a=list&page=<%=i%>"><%=i %></a></li>
+						<%
+							}
+							else
+							{
+						%>
+								<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=<%=i%>"><%=i %></a></li>
+						<%
+							}
+						%>
+					<%
+						}
+					%>	
+					<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=${page + 1}">▶</a></li>
+					
 					</ul>
 				</div>					
 				<!-- pager 추가 -->
@@ -74,7 +99,9 @@
 				</div>				
 			</div>
 		</div>
-		<c:import url="/WEB-INF/views/includes/navigation.jsp"/>
+		<c:import url="/WEB-INF/views/includes/navigation.jsp">
+			<c:param name="menu" value="board"/>
+		</c:import>	
 		<c:import url="/WEB-INF/views/includes/footer.jsp"/>
 	</div>
 </body>

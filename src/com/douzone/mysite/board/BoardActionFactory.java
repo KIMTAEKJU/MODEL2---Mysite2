@@ -2,6 +2,7 @@ package com.douzone.mysite.board;
 
 import com.douzone.mvc.action.AbstractActionFactory;
 import com.douzone.mvc.action.Action;
+import com.douzone.mysite.action.main.IndexAction;
 
 public class BoardActionFactory extends AbstractActionFactory
 {
@@ -46,6 +47,14 @@ public class BoardActionFactory extends AbstractActionFactory
 		else if ("reply".equals(actionName))
 		{
 			action = new BoardReplyAction();
+		}
+		else if ("comment".equals(actionName))
+		{
+			action = new BoardCommentAction();
+		}
+		else
+		{
+			action = new IndexAction();
 		}
 		return action;
 	}

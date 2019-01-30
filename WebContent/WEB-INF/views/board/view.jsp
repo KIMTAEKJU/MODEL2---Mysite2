@@ -37,11 +37,11 @@
 							</div>
 						</td>
 					</tr>
-					
+			
 				</table>
 				<div class="bottom">
 					<a href="${pageContext.servletContext.contextPath }/board?a=replyform&no=${no}">답글달기</a>
-					<a href="${pageContext.servletContext.contextPath }/board?a=list">글목록</a>
+					<a href="${pageContext.servletContext.contextPath }/board?a=list&page=1">글목록</a>
 					
 					<!-- if (sessionVo != null && list.get(0).getUserNo() == sessionVo.getNo()) -->
 					
@@ -49,6 +49,42 @@
 						<a href="${pageContext.servletContext.contextPath }/board?a=modifyform&no=${no}">글수정</a>
 					</c:if>
 				</div>
+				<table>
+					<c:forEach items="${listComment}" var="vo" varStatus="status">
+						<tr>
+							<td style="text-indent: 10px">
+								${vo.name} <br/>
+								${vo.content}
+								<hr>
+							</td>
+						</tr>
+					</c:forEach>
+				</table>
+				<form class="board-form" method="post" action="${pageContext.servletContext.contextPath }/board">
+					<input type = "hidden" name = "a" value="comment">
+					<input type = "hidden" name = "no" value="${no}">
+					<table class="tbl-ex">
+						<tr>
+							<th colspan="2">댓글</th>
+						</tr>
+						<tr>
+							<td class="label">닉네임</td>
+							<td><input type="text" name="name" value=""></td>
+							
+							<td class="label">비밀번호</td>
+							<td><input type="text" name="password" value=""></td>
+						</tr>
+						<tr>
+							<td class="label">내용</td>
+							<td>
+								<textarea id="content" name="content"></textarea>
+							</td>
+						</tr>
+					</table>
+					<div class="bottom">
+						<input type="submit" value="등록">
+					</div>
+				</form>	
 			</div>
 		</div>
 		</c:forEach>

@@ -141,7 +141,7 @@ public class BoardDao
 		return result;
 	}
 	
-	public boolean delete(long no, long userNo, long userNoFromSession)
+	public boolean delete(long no, long userNoFromSession)
 	{
 		boolean result = false;
 		Connection conn = null;
@@ -151,13 +151,11 @@ public class BoardDao
 		{
 			 conn = getConnection();
 			 
-			 String sql = "delete from board where no = ? and ? = ?";
-			 System.out.println("userNo : " + userNo);
+			 String sql = "delete from board where no = ? and user_no = ?";
 			 pstmt = conn.prepareCall(sql);
 			 
 			 pstmt.setLong(1, no);
-			 pstmt.setLong(2, userNo);
-			 pstmt.setLong(3, userNoFromSession);
+			 pstmt.setLong(2, userNoFromSession);
 			 
 			 int count = pstmt.executeUpdate();
 			 result = count == 1;
@@ -272,6 +270,7 @@ public class BoardDao
 		
 		return result;
 	}
+	
 	
 	public List<BoardVo> get(long no)
 	{
@@ -391,7 +390,7 @@ public class BoardDao
 		return list;
 	}
 	
-	public List<BoardVo> get()
+	public List<BoardVo> get(String kwd, int startPage, int listCount)
 	{
 		BoardVo result = null;
 		
@@ -404,13 +403,18 @@ public class BoardDao
 		try 
 		{
 			 conn = getConnection();
-			 
+			 System.out.println(kwd);
 			 String sql = "select a.title, b.name, a.hit, a.write_date, a.depth, a.contents, a.no, a.user_no, a.o_no" + 
 					 	  "	from board a, user b" + 
-					 	  "		where a.user_no = b.no" +
-					 	  "			order by a.g_no desc, a.o_no asc";
+					 	  "		where a.user_no = b.no and (a.title like '%" + kwd + "%' or a.contents like '%" + 
+					 	  kwd + "%' or b.name like '%" + kwd + "%')" + 
+					 	  "			group by a.no" + 
+					 	  "			order by a.g_no desc, a.o_no asc" +
+					 	  "				limit ?, ?";
 			 
 			 pstmt = conn.prepareCall(sql);
+			 pstmt.setInt(1, startPage-1);
+			 pstmt.setInt(2, listCount);
 			 
 			 rs = pstmt.executeQuery();
 			 
@@ -436,6 +440,60 @@ public class BoardDao
 				 result.setNo(no);
 				 result.setUserNo(userNo);
 				 result.setoNo(oNo);
+				 
+				 list.add(result);
+			 }
+		} 
+		catch (SQLException e) 
+		{
+			System.out.println("error : " + e);
+		}
+		finally 
+		{
+			try 
+			{
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} 
+			catch (SQLException e) 
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		return list;
+	}
+	
+	public List<BoardVo> get()
+	{
+		BoardVo result = null;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		List<BoardVo> list = new ArrayList<>();
+		
+		try 
+		{
+			 conn = getConnection();
+			 String sql = "select count(*) from board";
+			 
+			 pstmt = conn.prepareCall(sql);
+
+			 rs = pstmt.executeQuery();
+			 
+			 while (rs.next())
+			 {
+				 long totalCount = rs.getLong(1);
+				 
+				 
+				 result = new BoardVo();
+				 result.setTotalCount(totalCount);
 				 
 				 list.add(result);
 			 }
