@@ -483,9 +483,9 @@ public class BoardDao
 			 		"    user b\r\n" + 
 			 		"WHERE\r\n" + 
 			 		"    a.user_no = b.no\r\n" + 
-			 		"        AND (a.title LIKE '%%'\r\n" + 
-			 		"        OR a.contents LIKE '%%'\r\n" + 
-			 		"        OR b.name LIKE '%%')\r\n" + 
+			 		"        AND (a.title LIKE '%" + kwd + "%'\r\n" + 
+			 		"        OR a.contents LIKE '%" + kwd + "%'\r\n" + 
+			 		"        OR b.name LIKE '%" + kwd + "%')\r\n" + 
 			 		"GROUP BY a.no\r\n" + 
 			 		"ORDER BY a.g_no DESC , a.o_no ASC\r\n" + 
 			 		"limit ?, ?";
