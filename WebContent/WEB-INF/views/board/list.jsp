@@ -42,7 +42,9 @@
 									<c:if test="${vo.oNo != 1 }">
 										<img src="/mysite2/assets/images/reply.png"/>
 									</c:if>
-								<a href="${pageContext.servletContext.contextPath }/board?a=view&no=${vo.no}">${vo.title}</a></td>
+								
+								<a href="${pageContext.servletContext.contextPath }/board?a=view&no=${vo.no}">${vo.title} </a></td>
+								
 								<td>${vo.name}</td>
 								<td>${vo.hit}</td>
 								<td>${vo.write_Date}</td>

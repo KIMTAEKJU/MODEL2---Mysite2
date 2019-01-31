@@ -13,9 +13,17 @@ public class BoardVo
 	private long gNo;
 	private long oNo;
 	private long totalCount;
+	private long commentCount;
+
 	
 	
 	
+	public long getCommentCount() {
+		return commentCount;
+	}
+	public void setCommentCount(long commentCount) {
+		this.commentCount = commentCount;
+	}
 	public long getTotalCount() {
 		return totalCount;
 	}

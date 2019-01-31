@@ -271,6 +271,63 @@ public class BoardDao
 		return result;
 	}
 	
+	public List<BoardVo> getCommentCount(long boardNo)
+	{
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		List<BoardVo> list = new ArrayList<>();
+		try 
+		{
+			 conn = getConnection();
+			 
+			 String sql = "select b.no, count(*) from comment a, board b where a.board_no = b.no group by b.no";
+			 
+			 pstmt = conn.prepareCall(sql);
+			 
+			 pstmt.setLong(1, boardNo);
+			 
+			 rs = pstmt.executeQuery();
+			 
+			 while (rs.next())
+			 {
+				 long boardNos = rs.getLong(1);
+				 long commentCount = rs.getLong(2);
+				 
+				 BoardVo vo = new BoardVo();
+				 vo.setNo(boardNos);
+				 vo.setCommentCount(commentCount);
+				 
+				 list.add(vo);
+				 
+			 }
+			 
+		} 
+		catch (SQLException e) 
+		{
+			System.out.println("error : " + e);
+		}
+		finally 
+		{
+			try 
+			{
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} 
+			catch (SQLException e) 
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		return list;
+	}
 	
 	public List<BoardVo> get(long no)
 	{
