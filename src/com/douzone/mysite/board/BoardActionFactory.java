@@ -68,6 +68,14 @@ public class BoardActionFactory extends AbstractActionFactory
 		{
 			action = new BoardCommentDeleteAction();
 		}
+		else if ("commentReplyform".equals(actionName))
+		{
+			action = new BoardCommentReplyformAction();
+		}
+		else if ("commentReply".equals(actionName))
+		{
+			action = new BoardCommentReplyAction();
+		}
 		else
 		{
 			action = new IndexAction();

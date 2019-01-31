@@ -1,3 +1,4 @@
+
 <%@page import="com.douzone.mysite.vo.UserVo"%>
 <%@page import="com.douzone.mysite.vo.BoardVo"%>
 <%@page import="java.util.List"%>
@@ -52,7 +53,7 @@
 				<table>
 					<c:forEach items="${listComment}" var="vo" varStatus="status">
 						<tr>
-							<td>
+							<td style="padding-left:${20 * vo.depth}px">
 								<c:choose>
 									<c:when test="${vo.userNo != null }">
 										<strong style="color:red;">${vo.name}</strong> ${vo.writeDate } 
@@ -66,13 +67,14 @@
 								
 								<c:choose>
 									<c:when test="${session == null }">
-										<a href="${pageContext.servletContext.contextPath }/board?a=commentDeleteform&commentNo=${vo.no}&boardNo=${vo.boardNo}&userNo=${vo.userNo}">삭제</a><br/>
+										<a href="${pageContext.servletContext.contextPath }/board?a=commentDeleteform&commentNo=${vo.no}&boardNo=${vo.boardNo}&userNo=${vo.userNo}">삭제</a>
 									</c:when>
 									
 									<c:otherwise>
-										<a href="${pageContext.servletContext.contextPath }/board?a=commentDelete&commentNo=${vo.no}&boardNo=${vo.boardNo}">삭제</a><br/>
+										<a href="${pageContext.servletContext.contextPath }/board?a=commentDelete&commentNo=${vo.no}&boardNo=${vo.boardNo}">삭제</a>
 									</c:otherwise>
 								</c:choose>
+								<a href="${pageContext.servletContext.contextPath }/board?a=commentReplyform&commentNo=${vo.no}&boardNo=${vo.boardNo}">댓글 달기</a><br/>
 								
 								
 								<span>${vo.content}</span>
@@ -121,7 +123,9 @@
 			</div>
 		</div>
 		</c:forEach>
-		<c:import url="/WEB-INF/views/includes/navigation.jsp"/>
+		<c:import url="/WEB-INF/views/includes/navigation.jsp">
+			<c:param name="menu" value="board"/>
+		</c:import>
 		<c:import url="/WEB-INF/views/includes/footer.jsp"/>
 	</div>
 </body>

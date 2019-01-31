@@ -10,9 +10,32 @@ public class CommentVo
 	private String userNo;
 	private String writeDate;
 	private long commentNo;
+	private long gNo;
+	private long oNo;
+	private long depth;
 	
 	
 	
+	
+	
+	public long getgNo() {
+		return gNo;
+	}
+	public void setgNo(long gNo) {
+		this.gNo = gNo;
+	}
+	public long getoNo() {
+		return oNo;
+	}
+	public void setoNo(long oNo) {
+		this.oNo = oNo;
+	}
+	public long getDepth() {
+		return depth;
+	}
+	public void setDepth(long depth) {
+		this.depth = depth;
+	}
 	public long getCommentNo() {
 		return commentNo;
 	}
