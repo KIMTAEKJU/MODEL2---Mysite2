@@ -7,12 +7,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
-<%
-	long totalPage = (long)request.getAttribute("totalPage");
-	int startPage = (int)request.getAttribute("startPage");
-	int endPage = (int)request.getAttribute("endPage");
-
-%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -42,7 +36,7 @@
 					<c:forEach items="${list}" var="vo" varStatus = "status">
 					
 							<tr>
-								<td>${(status.index + (page - 1) * listCount) + 1} </td>
+								<td>${(status.index + (BoardPagingFrameWorkVo.page - 1) * BoardPagingFrameWorkVo.listCount) + 1} </td>
 								<td style="padding-left:${20 * vo.depth}px">
 								
 									<c:if test="${vo.oNo != 1 }">
@@ -57,68 +51,37 @@
 					</c:forEach>
 				</table>
 				
-				<!-- pager 추가 -->
-				 <!-- 프리비어스 페이지를 계산해줘야함 시작과 끝이 몇인지 계산해라
-														1~5면 5까지 게시물이있는지 확인 현재페이지도 넘겨줘야함 -->
 				<div class="pager">
 					<ul>
-					<c:choose>
-						<c:when test="${kwd == null}">
-							<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=${page - 1}">◀</a></li>
-						</c:when>
 						
-						<c:otherwise>
-							<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=${page - 1}&kwd=${kwd}">◀</a></li>
-						</c:otherwise>
-					</c:choose>
-					<%
-						for (int i = startPage; i <= ((endPage < totalPage) ? endPage : totalPage) ; i++)
-						{
-					%>
-						<%
-							if (i == (int)(request.getAttribute("page")))
-							{
-						%>
-								<c:choose>
-									<c:when test="${kwd == null}">
-										<li class="selected"><a href="${pageContext.servletContext.contextPath }/board?a=list&page=<%=i%>"><%=i %></a></li>
-									</c:when>
+					<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=${BoardPagingFrameWorkVo.page - 1}&kwd=${kwd}">◀</a></li>
+					
+						<c:choose>
+							<c:when test="${BoardPagingFrameWorkVo.endPage < BoardPagingFrameWorkVo.totalPage}">
+								<c:set var = "end" value="${BoardPagingFrameWorkVo.endPage }" />
+							</c:when>
+							
+							<c:otherwise>
+								<c:set var = "end" value="${BoardPagingFrameWorkVo.totalPage }" />
+							</c:otherwise>
+						</c:choose>
+												
+						<c:forEach var="i" begin="${BoardPagingFrameWorkVo.startPage}" end="${end}" step="1" >
 						
-									<c:otherwise>
-										<li class="selected"><a href="${pageContext.servletContext.contextPath }/board?a=list&page=<%=i%>&kwd=${kwd}"><%=i %></a></li>
-									</c:otherwise>
-								</c:choose>
-						<%
-							}
-							else
-							{
-						%>
-								<c:choose>
-									<c:when test="${kwd == null}">
-										<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=<%=i%>"><%=i %></a></li>
-									</c:when>
-									
-									<c:otherwise>
-										<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=<%=i%>&kwd=${kwd}"><%=i %></a></li>
-									</c:otherwise>
-									
-								</c:choose>
+							<c:choose>
+								<c:when test="${i == BoardPagingFrameWorkVo.page }">
+									<li class="selected"><a href="${pageContext.servletContext.contextPath }/board?a=list&page=${i}&kwd=${kwd}">${i}</a></li>	
+								</c:when>
 								
-						<%
-							}
-						%>
-					<%
-						}
-					%>	
-					<c:choose>
-						<c:when test="${kwd == null}">
-							<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=${page + 1}">▶</a></li>
-						</c:when>
-						
-						<c:otherwise>
-							<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=${page + 1}&kwd=${kwd}">▶</a></li>
-						</c:otherwise>
-					</c:choose>
+								<c:otherwise>
+									<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=${i}&kwd=${kwd}">${i}</a></li>
+								</c:otherwise>
+							</c:choose>
+							
+						</c:forEach>
+					
+					<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=${BoardPagingFrameWorkVo.page + 1}&kwd=${kwd}">▶</a></li>
+				
 					
 					</ul>
 				</div>					
