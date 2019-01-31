@@ -55,7 +55,8 @@
 				
 				<div class="pager">
 					<ul>
-						
+					<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=1&kwd=${kwd}">◁◀ </a></li>
+			
 					<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=${BoardPagingFrameWorkVo.page - 1}&kwd=${kwd}">◀</a></li>
 					
 						<c:choose>
@@ -84,7 +85,7 @@
 					
 					<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=${BoardPagingFrameWorkVo.page + 1}&kwd=${kwd}">▶</a></li>
 				
-					
+					<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=${BoardPagingFrameWorkVo.totalPage}&kwd=${kwd}"> ▶▷</a></li>
 					</ul>
 				</div>					
 				<!-- pager 추가 -->
