@@ -19,8 +19,18 @@ public class BoardSelectAction implements Action
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException 
 	{
-		// 총 게시물수 DB에서 받아옴
-		List<BoardVo> totalCountList = new BoardDao().get();
+		String kwd = request.getParameter("kwd");
+		List<BoardVo> totalCountList = null;
+		
+		if (kwd == null)
+			// 총 게시물수 DB에서 받아옴 검색어가 없을때
+			totalCountList = new BoardDao().get();
+		else
+		{
+			kwd = kwd.replaceAll(" ", "");
+			// 총 게시물수 DB에서 받아옴 검색어가 있을때
+			totalCountList = new BoardDao().getRetrievingSearchedItems(kwd);
+		}
 		
 		// 총 게시물 수
 		long totalCount = totalCountList.get(0).getTotalCount();
@@ -37,13 +47,13 @@ public class BoardSelectAction implements Action
 		
 		// 현재 페이지
 			
-		int getPage = (request.getParameter("page") != null) ? Integer.parseInt(request.getParameter("page")) : 1;
+		int getPage = (request.getParameter("page") != null) ? Integer.parseInt(request.getParameter("page")) : 0;
 		System.out.println("getPage : " + getPage);
-		int page = (int) ((getPage > totalPage) ? totalPage : getPage);
-		
+		int page = (int) ((getPage < 1) ? 1 : (getPage > totalPage) ? totalPage : getPage);
+		System.out.println("page : " + page);
 		// 시작 페이지
 		int startPage = (( (page-1) / pageCount) * pageCount) + 1;
-		
+
 		// 마지막 페이지
 		int endPage = startPage + pageCount - 1;
 		
@@ -57,11 +67,11 @@ public class BoardSelectAction implements Action
 		
 		List<BoardVo> list = null;
 		
-		if (request.getParameter("kwd") == null)
-			list = new BoardDao().get("", ((page-1) * listCount) + 1, listCount);
+		if (kwd == null)
+			list = new BoardDao().get("", ((page-1) * listCount) + 1, listCount); // 보여줄 게시물들
 		
 		else
-			list = new BoardDao().get(request.getParameter("kwd").replaceAll(" ", ""), startPage, listCount);
+			list = new BoardDao().get(kwd, ((page-1) * listCount) + 1, listCount);
 		
 		HttpSession session = request.getSession();
 		request.setAttribute("list", list);
@@ -71,6 +81,8 @@ public class BoardSelectAction implements Action
 		request.setAttribute("totalPage", totalPage);
 		request.setAttribute("listCount", listCount);
 		request.setAttribute("page", page);
+		if (kwd != null)
+			request.setAttribute("kwd", kwd);
 		WebUtils.forward(request, response, "/WEB-INF/views/board/list.jsp");
 	}
 

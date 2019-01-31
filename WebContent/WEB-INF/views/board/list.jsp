@@ -62,7 +62,15 @@
 														1~5면 5까지 게시물이있는지 확인 현재페이지도 넘겨줘야함 -->
 				<div class="pager">
 					<ul>
-					<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=${page - 1}">◀</a></li>
+					<c:choose>
+						<c:when test="${kwd == null}">
+							<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=${page - 1}">◀</a></li>
+						</c:when>
+						
+						<c:otherwise>
+							<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=${page - 1}&kwd=${kwd}">◀</a></li>
+						</c:otherwise>
+					</c:choose>
 					<%
 						for (int i = startPage; i <= ((endPage < totalPage) ? endPage : totalPage) ; i++)
 						{
@@ -71,20 +79,46 @@
 							if (i == (int)(request.getAttribute("page")))
 							{
 						%>
-								<li class="selected"><a href="${pageContext.servletContext.contextPath }/board?a=list&page=<%=i%>"><%=i %></a></li>
+								<c:choose>
+									<c:when test="${kwd == null}">
+										<li class="selected"><a href="${pageContext.servletContext.contextPath }/board?a=list&page=<%=i%>"><%=i %></a></li>
+									</c:when>
+						
+									<c:otherwise>
+										<li class="selected"><a href="${pageContext.servletContext.contextPath }/board?a=list&page=<%=i%>&kwd=${kwd}"><%=i %></a></li>
+									</c:otherwise>
+								</c:choose>
 						<%
 							}
 							else
 							{
 						%>
-								<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=<%=i%>"><%=i %></a></li>
+								<c:choose>
+									<c:when test="${kwd == null}">
+										<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=<%=i%>"><%=i %></a></li>
+									</c:when>
+									
+									<c:otherwise>
+										<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=<%=i%>&kwd=${kwd}"><%=i %></a></li>
+									</c:otherwise>
+									
+								</c:choose>
+								
 						<%
 							}
 						%>
 					<%
 						}
 					%>	
-					<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=${page + 1}">▶</a></li>
+					<c:choose>
+						<c:when test="${kwd == null}">
+							<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=${page + 1}">▶</a></li>
+						</c:when>
+						
+						<c:otherwise>
+							<li><a href="${pageContext.servletContext.contextPath }/board?a=list&page=${page + 1}&kwd=${kwd}">▶</a></li>
+						</c:otherwise>
+					</c:choose>
 					
 					</ul>
 				</div>					

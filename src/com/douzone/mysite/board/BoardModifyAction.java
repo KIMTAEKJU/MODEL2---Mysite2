@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import com.douzone.mvc.action.Action;
 import com.douzone.mvc.util.WebUtils;
 import com.douzone.mysite.repository.BoardDao;
+import com.douzone.mysite.repository.CommentDao;
 import com.douzone.mysite.vo.UserVo;
 
 public class BoardModifyAction implements Action 
@@ -24,8 +25,12 @@ public class BoardModifyAction implements Action
 		String content = request.getParameter("content");
 		String no = request.getParameter("no");
 		
+		System.out.println("title : " + title);
+		System.out.println("content : " + content);
+		System.out.println("no : " + no);
+		
 		if (vo != null)
-			new BoardDao().update(Long.parseLong(no), title, content, vo.getNo()); 
+			new BoardDao().update(Long.parseLong(no), title, content, vo.getNo());
 		
 		WebUtils.redirect(request, response, request.getContextPath() + "/board?a=list");
 	}

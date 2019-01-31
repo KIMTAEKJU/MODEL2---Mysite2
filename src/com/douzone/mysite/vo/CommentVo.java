@@ -8,9 +8,23 @@ public class CommentVo
 	private String content;
 	private long boardNo;
 	private String userNo;
+	private String writeDate;
+	private long commentNo;
 	
 	
 	
+	public long getCommentNo() {
+		return commentNo;
+	}
+	public void setCommentNo(long commentNo) {
+		this.commentNo = commentNo;
+	}
+	public String getWriteDate() {
+		return writeDate;
+	}
+	public void setWriteDate(String writeDate) {
+		this.writeDate = writeDate;
+	}
 	public String getUserNo() {
 		return userNo;
 	}

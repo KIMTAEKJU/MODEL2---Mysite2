@@ -52,6 +52,22 @@ public class BoardActionFactory extends AbstractActionFactory
 		{
 			action = new BoardCommentAction();
 		}
+		else if ("commentModifyform".equals(actionName))
+		{
+			action = new BoardCommentModifyFormAction();
+		}
+		else if ("commentModify".equals(actionName))
+		{
+			action = new BoardCommentModifyAction();
+		}
+		else if ("commentDeleteform".equals(actionName))
+		{
+			action = new BoardCommentDeleteFormAction();
+		}
+		else if ("commentDelete".equals(actionName))
+		{
+			action = new BoardCommentDeleteAction();
+		}
 		else
 		{
 			action = new IndexAction();

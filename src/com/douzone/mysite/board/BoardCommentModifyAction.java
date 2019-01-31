@@ -9,12 +9,11 @@ import javax.servlet.http.HttpSession;
 
 import com.douzone.mvc.action.Action;
 import com.douzone.mvc.util.WebUtils;
-import com.douzone.mysite.repository.BoardDao;
 import com.douzone.mysite.repository.CommentDao;
 import com.douzone.mysite.vo.CommentVo;
 import com.douzone.mysite.vo.UserVo;
 
-public class BoardCommentAction implements Action
+public class BoardCommentModifyAction implements Action
 {
 
 	@Override
@@ -23,22 +22,29 @@ public class BoardCommentAction implements Action
 		HttpSession hs = request.getSession();
 		UserVo uVo = (UserVo)hs.getAttribute("authuser");
 		
-		String no = request.getParameter("no"); // 글번호
-		String name = request.getParameter("name"); // 닉네임
-		String password = request.getParameter("password"); // 패스워드
-		String content = request.getParameter("content"); // 내용
+		String commentNo = request.getParameter("commentNo");
+		String password = request.getParameter("password");
+		String content = request.getParameter("content");
+		String boardNo = request.getParameter("boardNo");
 		
+		System.out.println("commentNo : " + commentNo);
+		System.out.println("password : " + password);
+		System.out.println("content : " + content);
+		System.out.println("boardNo : " + boardNo);
+
 		CommentVo vo = new CommentVo();
-		
-		vo.setBoardNo(Long.parseLong(no));
-		vo.setName(( uVo != null) ? uVo.getName() : name);
+		vo.setCommentNo(Long.parseLong(commentNo));
 		vo.setPassword(password);
 		vo.setContent(content);
-		vo.setUserNo(( uVo != null) ? String.valueOf(uVo.getNo()) : null); 
+		if (uVo != null)
+			vo.setUserNo(vo.getUserNo());
 		
-		new CommentDao().insert(vo);
+		new CommentDao().update(vo);
 		
-		WebUtils.redirect(request, response, request.getContextPath() + "/board?a=view&no=" + no);
+		WebUtils.redirect(request, response, request.getContextPath() + "/board?a=view&no=" + boardNo);
+		
+		
+		
 	}
 
 }

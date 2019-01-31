@@ -52,12 +52,35 @@
 				<table>
 					<c:forEach items="${listComment}" var="vo" varStatus="status">
 						<tr>
-							<td style="text-indent: 10px">
-								${vo.name} <br/>
-								${vo.content}
+							<td>
+								<c:choose>
+									<c:when test="${vo.userNo != null }">
+										<strong style="color:red;">${vo.name}</strong> ${vo.writeDate } 
+									</c:when>
+									
+									<c:otherwise>
+										<strong>${vo.name}</strong> ${vo.writeDate } 
+									</c:otherwise>
+								</c:choose>
+								<a href="${pageContext.servletContext.contextPath }/board?a=commentModifyform&commentNo=${vo.no}&boardNo=${vo.boardNo}">수정</a> 
+								
+								<c:choose>
+									<c:when test="${session == null }">
+										<a href="${pageContext.servletContext.contextPath }/board?a=commentDeleteform&commentNo=${vo.no}&boardNo=${vo.boardNo}&userNo=${vo.userNo}">삭제</a><br/>
+									</c:when>
+									
+									<c:otherwise>
+										<a href="${pageContext.servletContext.contextPath }/board?a=commentDelete&commentNo=${vo.no}&boardNo=${vo.boardNo}">삭제</a><br/>
+									</c:otherwise>
+								</c:choose>
+								
+								
+								<span>${vo.content}</span>
 								<hr>
+								
 							</td>
 						</tr>
+						
 					</c:forEach>
 				</table>
 				<form class="board-form" method="post" action="${pageContext.servletContext.contextPath }/board">
@@ -69,10 +92,20 @@
 						</tr>
 						<tr>
 							<td class="label">닉네임</td>
-							<td><input type="text" name="name" value=""></td>
+							<c:choose>
+								<c:when test="${session == null }">
+									<td><input type="text" name="name" value="" ></td>
+								</c:when>
+								
+								<c:otherwise>
+									<td>${session.name }</td>
+								</c:otherwise>
+							</c:choose>
 							
-							<td class="label">비밀번호</td>
-							<td><input type="text" name="password" value=""></td>
+							<c:if test="${session == null }">
+								<td class="label">비밀번호</td>
+								<td><input type="text" name="password" value=""></td>
+							</c:if>	
 						</tr>
 						<tr>
 							<td class="label">내용</td>

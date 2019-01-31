@@ -522,6 +522,73 @@ public class BoardDao
 		return list;
 	}
 	
+	public List<BoardVo> getRetrievingSearchedItems(String kwd)
+	{
+		BoardVo result = null;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		List<BoardVo> list = new ArrayList<>();
+		
+		try 
+		{
+			 conn = getConnection();
+			 String sql = "SELECT \r\n" + 
+			 		"    COUNT(*)\r\n" + 
+			 		"FROM\r\n" + 
+			 		"    (SELECT \r\n" + 
+			 		"        COUNT(*)\r\n" + 
+			 		"    FROM\r\n" + 
+			 		"        board a, user b\r\n" + 
+			 		"    WHERE\r\n" + 
+			 		"        a.user_no = b.no\r\n" + 
+			 		"            AND (a.title LIKE '%" + kwd + "%'\r\n" + 
+			 		"            OR a.contents LIKE '%" + kwd + "%'\r\n" + 
+			 		"            OR b.name LIKE '%" + kwd + "%')\r\n" + 
+			 		"    GROUP BY a.no\r\n" + 
+			 		"    ORDER BY a.g_no DESC , a.o_no ASC) a";
+			 
+			 pstmt = conn.prepareCall(sql);
+
+			 rs = pstmt.executeQuery();
+			 
+			 while (rs.next())
+			 {
+				 long totalCount = rs.getLong(1);
+				 
+				 
+				 result = new BoardVo();
+				 result.setTotalCount(totalCount);
+				 
+				 list.add(result);
+			 }
+		} 
+		catch (SQLException e) 
+		{
+			System.out.println("error : " + e);
+		}
+		finally 
+		{
+			try 
+			{
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} 
+			catch (SQLException e) 
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		return list;
+	}
+	
 	private static Connection getConnection() throws SQLException
 	{
 		Connection conn = null;

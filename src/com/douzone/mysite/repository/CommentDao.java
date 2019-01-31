@@ -13,6 +13,138 @@ import com.douzone.mysite.vo.CommentVo;
 
 public class CommentDao 
 {
+	public boolean deleteLoginComment(String userNo, String commentNo)
+	{
+		boolean result = false;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try 
+		{
+			 conn = getConnection();
+			 
+			 String sql = "delete from comment where no = ? and user_no = ?";
+			 
+			 pstmt = conn.prepareCall(sql);
+			 
+			 pstmt.setString(1, commentNo);
+			 pstmt.setString(2, userNo);
+			 
+			 int count = pstmt.executeUpdate();
+			 result = count == 1;
+		} 
+		catch (SQLException e) 
+		{
+			System.out.println("error : " + e);
+		}
+		finally 
+		{
+			try 
+			{
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} 
+			catch (SQLException e) 
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	
+	public boolean delete(String password, String commentNo)
+	{
+		boolean result = false;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try 
+		{
+			 conn = getConnection();
+			 
+			 String sql = "delete from comment where no = ? and password = ?";
+			 
+			 pstmt = conn.prepareCall(sql);
+			 
+			 pstmt.setString(1, commentNo);
+			 pstmt.setString(2, password);
+			 
+			 int count = pstmt.executeUpdate();
+			 result = count == 1;
+		} 
+		catch (SQLException e) 
+		{
+			System.out.println("error : " + e);
+		}
+		finally 
+		{
+			try 
+			{
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} 
+			catch (SQLException e) 
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	
+	public boolean update(CommentVo vo)
+	{
+		boolean result = false;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try 
+		{
+			 conn = getConnection();
+			 String sql = null;
+			 if (vo.getPassword() != null)
+				 sql = "update comment set contents = ? where no = ? and password = ?";
+			 else 
+				 sql = "update comment set contents = ? where no = ? and password is ? and user_no = ?";
+			 
+			 pstmt = conn.prepareCall(sql);
+			 
+			 pstmt.setString(1, vo.getContent());
+			 pstmt.setLong(2, vo.getCommentNo());
+			 pstmt.setString(3, vo.getPassword());
+			 
+			 if (vo.getPassword() == null)
+				 pstmt.setString(4, vo.getUserNo());
+			 int count = pstmt.executeUpdate();
+			 result = count == 1;
+		} 
+		catch (SQLException e) 
+		{
+			System.out.println("error : " + e);
+		}
+		finally 
+		{
+			try 
+			{
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} 
+			catch (SQLException e) 
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	
 	public List<CommentVo> get(long no)
 	{
 		CommentVo result = null;
@@ -27,7 +159,7 @@ public class CommentDao
 		{
 			 conn = getConnection();
 			 
-			 String sql = "select name, contents, write_date, user_no from comment where board_no = ?";
+			 String sql = "select no, name, contents, write_date, user_no, board_no from comment where board_no = ?";
 			 
 			 pstmt = conn.prepareCall(sql);
 			 
@@ -36,14 +168,20 @@ public class CommentDao
 			 
 			 while (rs.next())
 			 {
-				 String name = rs.getString(1);
-				 String content = rs.getString(2);
-				 String writeDate = rs.getString(3);
-				 String userNo = rs.getString(4);
+				 long commentNo = rs.getLong(1);
+				 String name = rs.getString(2);
+				 String content = rs.getString(3);
+				 String writeDate = rs.getString(4);
+				 String userNo = rs.getString(5);
+				 long boardNo = rs.getLong(6);
 				
 				 result = new CommentVo();
+				 result.setNo(commentNo);
 				 result.setName(name);
 				 result.setContent(content);
+				 result.setWriteDate(writeDate);
+				 result.setUserNo(userNo);
+				 result.setBoardNo(boardNo);
 				 
 				 list.add(result);
 			 }
