@@ -43,7 +43,7 @@
 										<img src="/mysite2/assets/images/reply.png"/>
 									</c:if>
 								
-								<a href="${pageContext.servletContext.contextPath }/board?a=view&no=${vo.no}">${vo.title} </a></td>
+								<a href="${pageContext.servletContext.contextPath }/board?a=view&no=${vo.no}">${vo.title} <span style="color: red;">(${vo.commentCount})</span></a></td>
 								
 								<td>${vo.name}</td>
 								<td>${vo.hit}</td>

@@ -37,14 +37,14 @@ public class BoardSelectAction implements Action
 									((result.getPage()-1) * result.getListCount()) + 1,
 										result.getListCount());
 		
-		List<BoardVo> commentCount = new BoardDao().getCommentCount(list.get(0).getNo());
+		//List<BoardVo> commentCount = new BoardDao().getCommentCount(list.get(0).getNo());
 		
 		HttpSession session = request.getSession();
 		request.setAttribute("list", list);
 		request.setAttribute("session", session.getAttribute("authuser"));
 		request.setAttribute("BoardPagingFrameWorkVo", result);
 		request.setAttribute("kwd", kwd);
-		request.setAttribute("commentCount", commentCount);
+		//request.setAttribute("commentCount", commentCount);
 		WebUtils.forward(request, response, "/WEB-INF/views/board/list.jsp");
 	}
 

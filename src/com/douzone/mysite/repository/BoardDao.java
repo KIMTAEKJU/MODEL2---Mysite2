@@ -271,63 +271,63 @@ public class BoardDao
 		return result;
 	}
 	
-	public List<BoardVo> getCommentCount(long boardNo)
-	{
-		
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		
-		List<BoardVo> list = new ArrayList<>();
-		try 
-		{
-			 conn = getConnection();
-			 
-			 String sql = "select b.no, count(*) from comment a, board b where a.board_no = b.no group by b.no";
-			 
-			 pstmt = conn.prepareCall(sql);
-			 
-			 pstmt.setLong(1, boardNo);
-			 
-			 rs = pstmt.executeQuery();
-			 
-			 while (rs.next())
-			 {
-				 long boardNos = rs.getLong(1);
-				 long commentCount = rs.getLong(2);
-				 
-				 BoardVo vo = new BoardVo();
-				 vo.setNo(boardNos);
-				 vo.setCommentCount(commentCount);
-				 
-				 list.add(vo);
-				 
-			 }
-			 
-		} 
-		catch (SQLException e) 
-		{
-			System.out.println("error : " + e);
-		}
-		finally 
-		{
-			try 
-			{
-				if (rs != null)
-					rs.close();
-				if (pstmt != null)
-					pstmt.close();
-				if (conn != null)
-					conn.close();
-			} 
-			catch (SQLException e) 
-			{
-				e.printStackTrace();
-			}
-		}
-		
-		return list;
-	}
+//	public List<BoardVo> getCommentCount(long boardNo)
+//	{
+//		
+//		Connection conn = null;
+//		PreparedStatement pstmt = null;
+//		ResultSet rs = null;
+//		
+//		List<BoardVo> list = new ArrayList<>();
+//		try 
+//		{
+//			 conn = getConnection();
+//			 
+//			 String sql = "select b.no, count(*) from comment a, board b where a.board_no = b.no group by b.no";
+//			 
+//			 pstmt = conn.prepareCall(sql);
+//			 
+//			 pstmt.setLong(1, boardNo);
+//			 
+//			 rs = pstmt.executeQuery();
+//			 
+//			 while (rs.next())
+//			 {
+//				 long boardNos = rs.getLong(1);
+//				 long commentCount = rs.getLong(2);
+//				 
+//				 BoardVo vo = new BoardVo();
+//				 vo.setNo(boardNos);
+//				 vo.setCommentCount(commentCount);
+//				 
+//				 list.add(vo);
+//				 
+//			 }
+//			 
+//		} 
+//		catch (SQLException e) 
+//		{
+//			System.out.println("error : " + e);
+//		}
+//		finally 
+//		{
+//			try 
+//			{
+//				if (rs != null)
+//					rs.close();
+//				if (pstmt != null)
+//					pstmt.close();
+//				if (conn != null)
+//					conn.close();
+//			} 
+//			catch (SQLException e) 
+//			{
+//				e.printStackTrace();
+//			}
+//		}
+//		
+//		return list;
+//	}
 	
 	public List<BoardVo> get(long no)
 	{
@@ -461,13 +461,34 @@ public class BoardDao
 		{
 			 conn = getConnection();
 			 System.out.println(kwd);
-			 String sql = "select a.title, b.name, a.hit, a.write_date, a.depth, a.contents, a.no, a.user_no, a.o_no" + 
-					 	  "	from board a, user b" + 
-					 	  "		where a.user_no = b.no and (a.title like '%" + kwd + "%' or a.contents like '%" + 
-					 	  kwd + "%' or b.name like '%" + kwd + "%')" + 
-					 	  "			group by a.no" + 
-					 	  "			order by a.g_no desc, a.o_no asc" +
-					 	  "				limit ?, ?";
+			 String sql = "SELECT \r\n" + 
+			 		"    a.title,\r\n" + 
+			 		"    b.name,\r\n" + 
+			 		"    a.hit,\r\n" + 
+			 		"    a.write_date,\r\n" + 
+			 		"    a.depth,\r\n" + 
+			 		"    a.contents,\r\n" + 
+			 		"    a.no,\r\n" + 
+			 		"    a.user_no,\r\n" + 
+			 		"    a.o_no,\r\n" + 
+			 		"    (SELECT \r\n" + 
+			 		"    COUNT(*) '댓글수'\r\n" + 
+			 		"FROM\r\n" + 
+			 		"    comment c,\r\n" + 
+			 		"    board d\r\n" + 
+			 		"WHERE\r\n" + 
+			 		"    c.board_no = d.no AND d.no = a.no) '댓글수'\r\n" + 
+			 		"FROM\r\n" + 
+			 		"    board a,\r\n" + 
+			 		"    user b\r\n" + 
+			 		"WHERE\r\n" + 
+			 		"    a.user_no = b.no\r\n" + 
+			 		"        AND (a.title LIKE '%%'\r\n" + 
+			 		"        OR a.contents LIKE '%%'\r\n" + 
+			 		"        OR b.name LIKE '%%')\r\n" + 
+			 		"GROUP BY a.no\r\n" + 
+			 		"ORDER BY a.g_no DESC , a.o_no ASC\r\n" + 
+			 		"limit ?, ?";
 			 
 			 pstmt = conn.prepareCall(sql);
 			 pstmt.setInt(1, startPage-1);
@@ -486,6 +507,7 @@ public class BoardDao
 				 long no = rs.getLong(7);
 				 long userNo = rs.getLong(8);
 				 long oNo = rs.getLong(9);
+				 long commentCount = rs.getLong(10);
 				 
 				 result = new BoardVo();
 				 result.setTitle(title);
@@ -497,6 +519,7 @@ public class BoardDao
 				 result.setNo(no);
 				 result.setUserNo(userNo);
 				 result.setoNo(oNo);
+				 result.setCommentCount(commentCount);
 				 
 				 list.add(result);
 			 }
