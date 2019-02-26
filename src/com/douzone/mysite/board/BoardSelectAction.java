@@ -23,7 +23,8 @@ public class BoardSelectAction implements Action
 	{
 		String kwd = request.getParameter("kwd");
 		BoardPagingFrameWorkVo result = null;
-			
+		
+		System.out.println("mysite2 kwd : " + kwd);
 		if (kwd == null) // 검색어가 없으면 공백을 준다   공백을주면 전체 다 나옴
 			kwd = "";
 		

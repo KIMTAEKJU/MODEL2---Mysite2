@@ -27,7 +27,7 @@ public class AjaxListAction implements Action{
 			sPage = "1";
 		}
 		
-		if (sPage.matches("\\d*") == false)
+		if (sPage.matches("[-+]?\\d*\\.?\\d+") == false)
 		{
 			sPage = "1";
 		}
